@@ -1,10 +1,11 @@
 {
   "name": "shortly-backend",
   "version": "1.0.0",
+  "type": "module",
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "nopdemon"
+    "test": "npx nodemon src/app.js"
   },
   "repository": {
     "type": "git",
