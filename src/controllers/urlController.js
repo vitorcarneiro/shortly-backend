@@ -68,9 +68,32 @@ export async function findUrl(req, res) {
     JOIN "longUrls" l ON s."longUrlId"=l.id
       WHERE "shortUrl"=$1`, [shortUrl]);
 
-    if(existingShortUrl.rowCount === 0) { return res.sendStatus(404); }
+    if(existingShortUrl.rowCount === 0) { return res.sendStatus(404) }
 
     res.send(existingShortUrl.rows[0]);
+  } catch (error) {
+    console.log(error);
+    return res.sendStatus(500);
+  }
+}
+
+export async function deleteShortUrl(req, res) {
+  const shortUrlId = req.params.id;
+  const userId = res.locals.user.id;
+
+  try {
+    const existingShortUrl = await connection.query(`
+      SELECT * FROM "shortUrls"
+        WHERE id=$1`, [shortUrlId]);
+
+    if(existingShortUrl.rows[0].userId !== userId) { return res.sendStatus(401) };
+    if(existingShortUrl.rowCount === 0) { return res.sendStatus(404) };
+
+    await connection.query(`
+      DELETE FROM "shortUrls"
+        WHERE id=$1`, [shortUrlId]);
+
+    res.sendStatus(204);
   } catch (error) {
     console.log(error);
     return res.sendStatus(500);
