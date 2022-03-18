@@ -11,9 +11,15 @@ CREATE TABLE sessions (
    "userId" INTEGER NOT NULL REFERENCES users(id)
 );
 
-CREATE TABLE "shortenUrls" (
+CREATE TABLE "longUrls" (
+   id SERIAL PRIMARY KEY,
+   "longUrl" TEXT NOT NULL
+);
+
+CREATE TABLE "shortUrls" (
 	id SERIAL NOT NULL PRIMARY KEY,
-	"longUrl" TEXT NOT NULL UNIQUE,
-	"shortUrl" TEXT NOT NULL UNIQUE,
-	"userId" INTEGER NOT NULL REFERENCES users(id)
+   "shortUrl" TEXT NOT NULL,
+	"userId" INTEGER NOT NULL REFERENCES users(id),
+	"longUrlId" INTEGER NOT NULL REFERENCES "longUrls"(id),
+	"visitCount" INTEGER NOT NULL DEFAULT 0 CHECK ("visitCount" >= 0)
 );
